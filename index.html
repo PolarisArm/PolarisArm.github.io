@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>IOTLABx</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="bootstrap5.css">
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+    <script type="text/javascript" charset="utf8" src="js/jquery-3.5.1.js"></script>
+    <script type="text/javascript" charset="utf8" src="js/bootstrap.bundle.min.js"></script>
+
+    <script type="module" src="js/chart.umd.js"></script>
+
+</head>
+
+<body>
+    <header>
+        <div class="navBar">
+            <input type="checkbox" id="sidebar_active">
+
+            <label for="sidebar_active" class="open-sidebar-button">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#f9e9de">
+                    <path d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z" />
+                </svg>
+            </label>
+            <div class="links-container">
+                <label for="sidebar_active" class="close-sidebar-button">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#f9e9de">
+                        <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
+                    </svg>
+                </label>
+                <a href="index.html" class="Home-link">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000">
+                        <path d="M160-200v-360q0-19 8.5-36t23.5-28l240-180q21-16 48-16t48 16l240 180q15 11 23.5 28t8.5 36v360q0 33-23.5 56.5T720-120H600q-17 0-28.5-11.5T560-160v-200q0-17-11.5-28.5T520-400h-80q-17 0-28.5 11.5T400-360v200q0 17-11.5 28.5T360-120H240q-33 0-56.5-23.5T160-200Z" />
+                    </svg>
+                </a>
+                <button id="darkmodeButton" class="darkmode" value="0">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000">
+                        <path d="M480-280q-83 0-141.5-58.5T280-480q0-83 58.5-141.5T480-680q83 0 141.5 58.5T680-480q0 83-58.5 141.5T480-280ZM80-440q-17 0-28.5-11.5T40-480q0-17 11.5-28.5T80-520h80q17 0 28.5 11.5T200-480q0 17-11.5 28.5T160-440H80Zm720 0q-17 0-28.5-11.5T760-480q0-17 11.5-28.5T800-520h80q17 0 28.5 11.5T920-480q0 17-11.5 28.5T880-440h-80ZM480-760q-17 0-28.5-11.5T440-800v-80q0-17 11.5-28.5T480-920q17 0 28.5 11.5T520-880v80q0 17-11.5 28.5T480-760Zm0 720q-17 0-28.5-11.5T440-80v-80q0-17 11.5-28.5T480-200q17 0 28.5 11.5T520-160v80q0 17-11.5 28.5T480-40ZM226-678l-43-42q-12-11-11.5-28t11.5-29q12-12 29-12t28 12l42 43q11 12 11 28t-11 28q-11 12-27.5 11.5T226-678Zm494 495-42-43q-11-12-11-28.5t11-27.5q11-12 27.5-11.5T734-282l43 42q12 11 11.5 28T777-183q-12 12-29 12t-28-12Zm-42-495q-12-11-11.5-27.5T678-734l42-43q11-12 28-11.5t29 11.5q12 12 12 29t-12 28l-43 42q-12 11-28 11t-28-11ZM183-183q-12-12-12-29t12-28l43-42q12-11 28.5-11t27.5 11q12 11 11.5 27.5T282-226l-42 43q-11 12-28 11.5T183-183Z" />
+                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000">
+                        <path d="M480-120q-151 0-255.5-104.5T120-480q0-138 90-239.5T440-838q13-2 23 3.5t16 14.5q6 9 6.5 21t-7.5 23q-17 26-25.5 55t-8.5 61q0 90 63 153t153 63q31 0 61.5-9t54.5-25q11-7 22.5-6.5T819-479q10 5 15.5 15t3.5 24q-14 138-117.5 229T480-120Z" />
+                    </svg>
+                </button>
+                <!-- Replace your existing account link with this -->
+                <div class="account-dropdown">
+                    <a href="#" class="account-link" id="accountLink">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000">
+                            <path d="M480-480q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM160-160v-112q0-34 17.5-62.5T224-378q62-31 126-46.5T480-440q66 0 130 15.5T736-378q29 15 46.5 43.5T800-272v112H160Z"/>
+                        </svg>
+                        <span id="userEmail">Account</span>
+                        <svg class="dropdown-arrow" xmlns="http://www.w3.org/2000/svg" height="16px" viewBox="0 -960 960 960" width="16px" fill="#000000">
+                            <path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z"/>
+                        </svg>
+                    </a>
+                    <div class="dropdown-menu" id="dropdownMenu">
+                        <div class="dropdown-item user-info">
+                            <strong id="dropdownEmail">user@example.com</strong>
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item" id="logoutButton">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 -960 960 960" width="18px" fill="#000000">
+                                <path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h280v80H200v560h280v80H200Zm440-160-55-58 102-102H360v-80h327L585-622l55-58 200 200-200 200Z"/>
+                            </svg>
+                            Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </header>
+    <main>
+        <div class="system-status-head "> SYSTEM STATUS</div>
+
+        <div class="status-class">
+         
+            <div class="phase-voltage">
+                <div class="phase">
+                    <div class="phase-heading-B">P1</div>
+                    <div class="divider"></div>
+                    <div class="value-row">
+                    <span class="label">V: </span>
+                    <span class="value voltage_value_1">220</span>
+                    <span class="unit">V</span>
+                    </div>
+                    <div class="value-row">
+                    <span class="label">I: </span>
+                    <span class="value current_value_1">1000.25</span>
+                    <span class="unit">mA</span>
+                    </div>
+                </div>
+
+                <div class="vl"></div>
+
+                <div class="phase">
+                    <div class="phase-heading-Y">P2</div>
+                    <div class="divider"></div>
+                    <div class="value-row">
+                    <span class="label">V: </span>
+                    <span class="value voltage_value_2">220</span>
+                    <span class="unit">V</span>
+                    </div>
+                    <div class="value-row">
+                    <span class="label">I: </span>
+                    <span class="value current_value_2">1000.25</span>
+                    <span class="unit">mA</span>
+                    </div>
+                </div>
+
+                <div class="vl"></div>
+
+                <div class="phase">
+                    <div class="phase-heading-B">P3</div>
+                    <div class="divider"></div>
+                    <div class="value-row">
+                    <span class="label">V: </span>
+                    <span class="value voltage_value_3">220</span>
+                    <span class="unit">V</span>
+                    </div>
+                    <div class="value-row">
+                    <span class="label">I: </span>
+                    <span class="value current_value_3">1000.25</span>
+                    <span class="unit">mA</span>
+                    </div>
+                </div>
+                </div>
+
+            <div class="rpm">
+                <div class="circular_rpm">
+                    <div class="rpm_text">RPM <div class="rpm_val">100</div>
+                    </div>
+                </div>
+            </div>
+            <div class="Pf">
+                <div class="circular_pf">
+                    <div class="pf_text">PF <div class="pf_val">0.50</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="temperature">
+                <div class="circular_temp">
+                    <div class="temp_text">TEMP <div class="temp_val">30 </div>
+                        <div class="temp_unit">°C</div>
+                    </div>
+                </div>
+            </div>
+           <div class="Indicator">
+                    <h3 class="indicator-title">PHASE OVERVOLTAGE</h3>
+                    <div class="circle-row">
+                        <div class="circle" id="circle1" data-label="R"></div>
+                        <div class="circle" id="circle2" data-label="Y"></div>
+                        <div class="circle" id="circle3" data-label="B"></div>
+                    </div>
+
+                    <h3 class="indicator-title">PHASE OVER CURRENT</h3>
+                    <div class="circle-row">
+                        <div class="circle" id="circle4" data-label="R"></div>
+                        <div class="circle" id="circle5" data-label="Y"></div>
+                        <div class="circle" id="circle6" data-label="B"></div>
+                    </div>
+                    </div>            
+            </div>
+        <div class="graph ">
+            <canvas class="graph_canvas" id="graphing"></canvas>
+        </div>
+
+        <div class="button_card darkmode">
+
+            <div class="vfd">
+                <div class="BTNCARD_TEXT">VFD</div>
+
+                <div class="vfdbtn_card">
+                    <button id="vfd_forward" value="0">VF OFF</button>
+                    <button id="vfd_reverse" value="0">VR OFF</button>
+                </div>
+
+                <input type="range" class="motor_speed" id="motorSpeed_slider" value="0" min="0" max="100">
+                <span id="rangeValue">0</span>
+            </div>
+            <div class="manual_or_vfd">
+                <div class="BTNCARD_TEXT">VFD OR MANUAL</div>
+                <button id="manual_or_vfd_select" value="0">MANUAL</button>
+
+            </div>
+
+            <div class="manual">
+                <div class="BTNCARD_TEXT">STAR DELTA</div>
+
+                <div class="stardeltabtn_card">
+                    <button id="star_delta_forward" value="0">SDF OFF</button>
+                    <button id="star_delta_reverse" value="0">SDR OFF</button>
+                </div>
+
+            </div>
+        </div>
+           </main>
+    <footer class="darkmode">
+        <div class="footer_text">
+            THIS PAGE IS SHOWING EVERYDATA WE GATHERED FROM OUR SYSTEM OVER THE INTERNET.<br>
+            WE CAN ALSO CONTROL OUR SYSTEM BY USING SWITCH AND SLIDER IN THIS PAGE.
+        </div>
+    </footer>
+
+
+    <script type="module" src="js/app.js"></script>
+
+</body>
+
+</html>

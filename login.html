@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>IOTLABx - Login</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .login-container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .logo {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            margin-right: 8px;
+        }
+
+        .checkbox-group label {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .login-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .login-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 14px;
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .success-message {
+            color: #155724;
+            font-size: 14px;
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .dashboard-container {
+            display: none;
+            text-align: center;
+        }
+
+        .dashboard-container h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .dashboard-btn {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .dashboard-btn.primary {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .dashboard-btn.primary:hover {
+            background-color: #0056b3;
+        }
+
+        .dashboard-btn.secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .dashboard-btn.secondary:hover {
+            background-color: #545b62;
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                margin: 20px;
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-container" id="loginForm">
+        <div class="logo">IOTLABx</div>
+        
+        <form id="authForm">
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" required>
+            </div>
+            
+            <div class="checkbox-group">
+                <input type="checkbox" id="rememberMe">
+                <label for="rememberMe">Remember me</label>
+            </div>
+            
+            <button type="submit" class="login-btn" id="loginBtn">
+                Sign In
+            </button>
+            
+            <div class="error-message" id="errorMessage"></div>
+            <div class="success-message" id="successMessage"></div>
+        </form>
+    </div>
+
+    <div class="dashboard-container" id="dashboard">
+        <h2>Welcome to IOTLABx</h2>
+        <p>You have successfully logged in!</p>
+        <a href="index.html" class="dashboard-btn primary">Go to Dashboard</a>
+        <button onclick="logout()" class="dashboard-btn secondary">Logout</button>
+    </div>
+
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAoPtIwjG3v9Qphd6fOnKwaYS3jLIVYTww",
+            authDomain: "esp32iottest-bf0fc.firebaseapp.com",
+            databaseURL: "https://esp32iottest-bf0fc-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "esp32iottest-bf0fc",
+            storageBucket: "esp32iottest-bf0fc.firebasestorage.app",
+            messagingSenderId: "769603524787",
+            appId: "1:769603524787:web:34b1dcea99188c2355f8c6"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+
+        // DOM elements
+        const loginForm = document.getElementById('loginForm');
+        const dashboard = document.getElementById('dashboard');
+        const authForm = document.getElementById('authForm');
+        const loginBtn = document.getElementById('loginBtn');
+        const errorMessage = document.getElementById('errorMessage');
+        const successMessage = document.getElementById('successMessage');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const rememberMeCheckbox = document.getElementById('rememberMe');
+
+        // Load saved credentials if remember me was checked
+        function loadSavedCredentials() {
+            const savedEmail = localStorage.getItem('rememberedEmail');
+            const savedPassword = localStorage.getItem('rememberedPassword');
+            const rememberMe = localStorage.getItem('rememberMe') === 'true';
+            
+            if (rememberMe && savedEmail && savedPassword) {
+                emailInput.value = savedEmail;
+                passwordInput.value = savedPassword;
+                rememberMeCheckbox.checked = true;
+            }
+        }
+
+        // Save credentials if remember me is checked
+        function saveCredentials(email, password) {
+            if (rememberMeCheckbox.checked) {
+                localStorage.setItem('rememberedEmail', email);
+                localStorage.setItem('rememberedPassword', password);
+                localStorage.setItem('rememberMe', 'true');
+            } else {
+                localStorage.removeItem('rememberedEmail');
+                localStorage.removeItem('rememberedPassword');
+                localStorage.removeItem('rememberMe');
+            }
+        }
+
+        // Show error message
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+            successMessage.style.display = 'none';
+        }
+
+        // Show success message
+        function showSuccess(message) {
+            successMessage.textContent = message;
+            successMessage.style.display = 'block';
+            errorMessage.style.display = 'none';
+        }
+
+        // Hide messages
+        function hideMessages() {
+            errorMessage.style.display = 'none';
+            successMessage.style.display = 'none';
+        }
+
+        // Set loading state
+        function setLoading(isLoading) {
+            loginBtn.disabled = isLoading;
+            loginBtn.textContent = isLoading ? 'Signing In...' : 'Sign In';
+        }
+
+        // Handle form submission
+        authForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            hideMessages();
+            
+            const email = emailInput.value.trim();
+            const password = passwordInput.value.trim();
+            
+            if (!email || !password) {
+                showError('Please enter both email and password');
+                return;
+            }
+            
+            setLoading(true);
+            
+            auth.signInWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    console.log('Login successful:', userCredential.user.email);
+                    saveCredentials(email, password);
+                    showSuccess('Login successful! Redirecting...');
+                    // The auth state change will handle the UI update
+                })
+                .catch((error) => {
+                    console.error('Login error:', error);
+                    setLoading(false);
+                    
+                    let errorMsg = 'Login failed. Please try again.';
+                    
+                    switch (error.code) {
+                        case 'auth/user-not-found':
+                            errorMsg = 'No user found with this email address.';
+                            break;
+                        case 'auth/wrong-password':
+                            errorMsg = 'Incorrect password.';
+                            break;
+                        case 'auth/invalid-email':
+                            errorMsg = 'Invalid email address.';
+                            break;
+                        case 'auth/user-disabled':
+                            errorMsg = 'This account has been disabled.';
+                            break;
+                        case 'auth/too-many-requests':
+                            errorMsg = 'Too many failed attempts. Please try again later.';
+                            break;
+                        default:
+                            errorMsg = error.message;
+                    }
+                    
+                    showError(errorMsg);
+                });
+        });
+
+        // Logout function
+        function logout() {
+            auth.signOut().then(() => {
+                console.log('User signed out');
+                loginForm.style.display = 'block';
+                dashboard.style.display = 'none';
+                hideMessages();
+                
+                // Clear form if remember me is not checked
+                if (!rememberMeCheckbox.checked) {
+                    emailInput.value = '';
+                    passwordInput.value = '';
+                }
+            }).catch((error) => {
+                console.error('Logout error:', error);
+                showError('Logout failed. Please try again.');
+            });
+        }
+
+        // Auth state change listener - NO AUTO LOGIN
+        auth.onAuthStateChanged((user) => {
+            setLoading(false);
+            
+            if (user) {
+                console.log('User is signed in:', user.email);
+                loginForm.style.display = 'none';
+                dashboard.style.display = 'block';
+            } else {
+                console.log('User is signed out');
+                loginForm.style.display = 'block';
+                dashboard.style.display = 'none';
+            }
+        });
+
+        // Load saved credentials when page loads
+        window.addEventListener('load', () => {
+            loadSavedCredentials();
+        });
+    </script>
+</body>
+
+</html>
