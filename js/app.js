@@ -336,20 +336,37 @@ logOutbutton.onclick = () =>  {
         manual_or_vfd_sel.innerHTML = data === 1 ? "VFD" : "MANUAL";
         manual_or_vfd_sel.value = data ===  1 ? 1 : 0;
 
-            if (manual_or_vfd_sel.value == 0) {
+            if (manual_or_vfd_sel.value === "0") {
+                vfd_forward.innerHTML = "VF OFF";
+                vfd_forward.value = "0";
+                vfd_reverse.innerHTML ="VR OFF";
+                vfd_reverse.value = "0";
+                motorSlider.value = 0;
+                document.getElementById("rangeValue").innerHTML = motorSlider.value;
+                slider_one_value = motorSlider.value;
+
                 vfd_forward.disabled = true;
                 vfd_reverse.disabled = true;
                 motorSlider.disabled = true;
                 star_delta_forward.disabled = false;
                 star_delta_reverse.disabled = false;
+                
+                console.log("STAR DELTA");
             }
             else {
+                star_delta_reverse.innerHTML = "SDR OFF";
+                star_delta_reverse.value = "0";
+                star_delta_forward.innerHTML = "SDF OFF";
+                star_delta_forward.value = "0";
                 star_delta_forward.disabled = true;
                 star_delta_reverse.disabled = true;
                 vfd_forward.disabled = false;
                 vfd_reverse.disabled = false;
                 motorSlider.disabled = false;
+               
+                console.log("VFD");
             }
+        
         console.log("Switch status MOVF:", data);
       });
     }
