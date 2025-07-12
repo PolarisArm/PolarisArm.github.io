@@ -464,14 +464,14 @@ logOutbutton.onclick = () =>  {
         /*temp_gauge.style.setProperty("--percentage_temp", Math.round(mapping(TEMP_VAL, 0, 100, -90, 90)));
         temp_value.innerHTML = TEMP_VAL;*/
 
-         let rpmAngle = mapping(RPM_VAL, 0, 3000, -45, 135);
-    rpm_gauge.style.setProperty("--angle_rpm", `${rpmAngle}deg`);
-    rmp_value.innerHTML = `${RPM_VAL} ${RPM_VAL > 0 ? "F" : RPM_VAL < 0 ? "R" : "OFF"}`;
+        let rpmAngle = mapping(RPM_VAL, 0, 3000, -45, 135);
+        rpm_gauge.style.setProperty("--angle_rpm", `${rpmAngle}deg`);
+        rmp_value.innerHTML = `${RPM_VAL} ${RPM_VAL > 0 ? "F" : RPM_VAL < 0 ? "R" : "OFF"}`;
 
-    // Update TEMP rotation (0 to 180 mapped to -90 to +90 degrees)
-    let tempAngle = mapping(TEMP_VAL, 0, 180, -45,135);
-    temp_gauge.style.setProperty("--angle_temp", `${tempAngle}deg`);
-    temp_value.innerHTML = `${TEMP_VAL}`;
+        // Update TEMP rotation (0 to 180 mapped to -90 to +90 degrees)
+        let tempAngle = mapping(TEMP_VAL, 0, 180, -45,135);
+        temp_gauge.style.setProperty("--angle_temp", `${tempAngle}deg`);
+        temp_value.innerHTML = `${TEMP_VAL}`;
 
         updateCircleStatus("circle1", P1V);
         updateCircleStatus("circle2", P2V);
