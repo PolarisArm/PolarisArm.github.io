@@ -651,7 +651,7 @@ logOutbutton.onclick = () =>  {
 
 
 
-    manual_or_vfd_sel.onclick = () => {
+/*     manual_or_vfd_sel.onclick = () => {
         if (manual_or_vfd_sel.value == 1) {
             manual_or_vfd_sel.value = 0;
             manual_or_vfd_sel_value = manual_or_vfd_sel.value;
@@ -706,7 +706,118 @@ logOutbutton.onclick = () =>  {
         }
 
     }
+ */
+   
 
+manual_or_vfd_sel.onclick = () => {
+    // Check if any button is in "manual" (i.e., value is "1")
+    const isAnyManual = 
+        star_delta_forward.value === "1" || 
+        star_delta_reverse.value === "1" ||
+        vfd_forward.value === "1" || 
+        vfd_reverse.value === "1";
+
+    if (isAnyManual) {
+        alert("Cannot switch mode while SDF, SDR, VF, or VR is active (ON).");
+        return; // Block the toggle
+    }
+
+    if (manual_or_vfd_sel.value == 1) {
+        manual_or_vfd_sel.value = 0;
+        manual_or_vfd_sel_value = manual_or_vfd_sel.value;
+        manual_or_vfd_sel.innerHTML = "MANUAL";
+        database.ref('Switch/MOVF').set(0);
+
+    } else {
+        manual_or_vfd_sel.value = 1;
+        manual_or_vfd_sel_value = manual_or_vfd_sel.value;
+        manual_or_vfd_sel.innerHTML = "VFD";
+        database.ref('Switch/MOVF').set(1);
+
+    }
+
+    toggleManualOrVFD();
+}
+
+
+function toggleManualOrVFD() {
+    if (manual_or_vfd_sel.value == 1) { // VFD selected
+        // Enable VFD controls
+        vfd_forward.disabled = false;
+        vfd_reverse.disabled = false;
+        motorSlider.disabled = false;
+        
+        // Reset and disable star-delta controls
+        star_delta_forward.value = "0";
+        star_delta_reverse.value = "0";
+        star_delta_forward_value = "0";  // Fixed: properly update the variable
+        star_delta_reverse_value = "0";  // Fixed: properly update the variable
+        star_delta_forward.innerHTML = "SDF OFF";
+        star_delta_reverse.innerHTML = "SDR OFF";
+        star_delta_forward.disabled = true;
+        star_delta_reverse.disabled = true;
+        
+        // Reset VFD values (they should start at 0 when switching to VFD mode)
+        vfd_forward.value = "0";
+        vfd_reverse.value = "0";
+        vfd_forward.innerHTML = "VF OFF";
+        vfd_reverse.innerHTML = "VR OFF";
+        vfd_forward_value = "0";  // Fixed: properly update the variable
+        vfd_reverse_value = "0";  // Fixed: properly update the variable
+        
+        // Reset slider
+        motorSlider.value = "0";
+        document.getElementById("rangeValue").innerHTML = motorSlider.value;
+        slider_one_value = "0";  // Fixed: properly update the variable
+        
+        // Update Firebase with all the reset values
+        database.ref('Switch/SDR').set(0);
+        database.ref('Switch/SDF').set(0);
+        database.ref('Switch/VF').set(0);   // Fixed: also reset VFD values in Firebase
+        database.ref('Switch/VR').set(0);   // Fixed: also reset VFD values in Firebase
+        database.ref('Switch/SLIDER_ONE').set(0);  // Fixed: also reset slider in Firebase
+        
+        console.log("VFD Mode Selected");
+        
+    } else { // MANUAL selected
+        // Reset and disable VFD controls
+        vfd_forward.value = "0";
+        vfd_reverse.value = "0";
+        vfd_forward.innerHTML = "VF OFF";
+        vfd_reverse.innerHTML = "VR OFF";
+        vfd_forward.disabled = true;
+        vfd_reverse.disabled = true;
+        vfd_forward_value = "0";  // Fixed: properly update the variable
+        vfd_reverse_value = "0";  // Fixed: properly update the variable
+        
+        // Reset and disable slider
+        motorSlider.value = "0";
+        document.getElementById("rangeValue").innerHTML = motorSlider.value;
+        motorSlider.disabled = true;
+        slider_one_value = "0";  // Fixed: properly update the variable
+        
+        // Enable star-delta controls but reset their values
+        star_delta_forward.value = "0";
+        star_delta_reverse.value = "0";
+        star_delta_forward_value = "0";  // Fixed: properly update the variable
+        star_delta_reverse_value = "0";  // Fixed: properly update the variable
+        star_delta_forward.innerHTML = "SDF OFF";
+        star_delta_reverse.innerHTML = "SDR OFF";
+        star_delta_forward.disabled = false;
+        star_delta_reverse.disabled = false;
+        
+        // Update Firebase with all the reset values
+        database.ref('Switch/VF').set(0);
+        database.ref('Switch/VR').set(0);
+        database.ref('Switch/SDF').set(0);  // Fixed: also reset star-delta values in Firebase
+        database.ref('Switch/SDR').set(0);  // Fixed: also reset star-delta values in Firebase
+        database.ref('Switch/SLIDER_ONE').set(0);  // Fixed: also reset slider in Firebase
+        
+        console.log("Manual Mode Selected");
+    }
+}
+   
+   
     motorSlider.oninput = () => {
         document.getElementById("rangeValue").innerHTML = motorSlider.value;
         database.ref('Switch/VSlider').set(motorSlider.value);
