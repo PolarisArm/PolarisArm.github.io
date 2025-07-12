@@ -21,40 +21,22 @@ document.addEventListener('DOMContentLoaded', () => {
     // User is not logged in, redirect to login page
     window.location.href = 'login.html'; // or whatever you name your login page
   }
-  // If user is logged in, continue with your existing code
 });
 /*  const email = "abc121@gmail.com";
 const password = "12389652369";
 
 
 
-// Auto-login logic
-firebase.auth().onAuthStateChanged((user) => {
-  if (user) {
-    loginForm.style.display = "none";
-    dashboard.style.display = "block";
-  } else {
-    firebase.auth().signInWithEmailAndPassword(email, password)
-      .then((userCredential) => {
-        loginForm.style.display = "none";
-        dashboard.style.display = "block";
-      })
-      .catch((error) => {
-        alert("Auto-login failed: " + error.message);
-        loginForm.style.display = "block";
-      });
-  }
-}); */
+*/
 
     // Write to Sensor
   
 
    
-    var websocket;
     let temperature = 0, rpm = 0, PF = 0;
     let PV1 = 0, PV2 = 0, PV3 = 0;
     let PI1 = 0, PI2 = 0, PI3 = 0;
-    var VIB_X = 0;
+    let currentUserEmail = null;
 
     const NORMAL_VOLT = 220;
     const UNDER_VOLT = 200;
@@ -69,7 +51,6 @@ firebase.auth().onAuthStateChanged((user) => {
     const vibBufferInterval = 250; // 50ms buffer interval
 
 
-    var maxDatapoint = 400;
 
     var vfd_forward = document.getElementById("vfd_forward");
     var vfd_reverse = document.getElementById("vfd_reverse");
@@ -173,11 +154,7 @@ firebase.auth().onAuthStateChanged((user) => {
         }
     }
 
-            // Add this to your existing app.js file
-
-        // Account dropdown functionality
-        let currentUserEmail = null;
-
+        
         // Update the auth state change listener to include email display
         firebase.auth().onAuthStateChanged((user) => {
             if (user) {
