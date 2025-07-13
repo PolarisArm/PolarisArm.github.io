@@ -42,8 +42,9 @@ const password = "12389652369";
     const UNDER_VOLT = 200;
     const OVER_VOLT = 250;
     const OVER_CURRENT = 5000;// mA
+    let isLocalChange = false; // Flag for avoiding Firebase echo
 
-    var slider_two, slider_three = 0;
+
 
     const buffer = [];
     const fftBuffer = [];
@@ -308,12 +309,40 @@ logOutbutton.onclick = () =>  {
         console.log("Switch status SDF:", data);
       });
 
-      database.ref('Switch/MOVF').on('value', (snapshot) => {
-        const data = snapshot.val();
-        manual_or_vfd_sel.innerHTML = data === 1 ? "VFD" : "MANUAL";
-        manual_or_vfd_sel.value = data ===  1 ? 1 : 0;
 
-            if (manual_or_vfd_sel.value === "0") {
+      database.ref('Switch/VF').on('value', (snapshot) => {
+        const data = parseInt(snapshot.val());
+        vfd_forward.innerHTML = data === 1 ? "VF ON" : "VF OFF";
+        vfd_forward.value = data === 1 ? 1 : 0;
+
+        if (vfd_forward.value == 1) { vfd_reverse.disabled = true; }
+        else { vfd_reverse.disabled = false; }
+        console.log("Switch status VF:", data);
+      });
+
+      database.ref('Switch/VR').on('value', (snapshot) => {
+        const data = parseInt(snapshot.val());
+        vfd_reverse.innerHTML = data === 1 ? "VR ON" : "VR OFF";
+        vfd_reverse.value = data === 1 ? 1 : 0;
+
+        if (vfd_reverse.value == 1) { vfd_forward.disabled = true; }
+        else { vfd_forward.disabled = false; }
+        console.log("Switch status VR:", data);
+      });
+
+       database.ref('Switch/MOVF').on('value', (snapshot) => {
+         if (isLocalChange) {
+        // Ignore the update that was just made locally
+        return;
+    }
+        const data = snapshot.val();
+        manual_or_vfd_sel.innerHTML = data === "1" ? "VFD" : "MANUAL";
+        manual_or_vfd_sel.value = data ===  "1" ? "1" : "0";
+        manual_or_vfd_sel_value = manual_or_vfd_sel.value;
+        console.log("Database: "+data);
+        console.log("MOV: "+manual_or_vfd_sel.value);
+
+         if (manual_or_vfd_sel.value === "0") {
                 vfd_forward.innerHTML = "VF OFF";
                 vfd_forward.value = "0";
                 vfd_reverse.innerHTML ="VR OFF";
@@ -342,7 +371,7 @@ logOutbutton.onclick = () =>  {
                 motorSlider.disabled = false;
                
                 console.log("VFD");
-            }
+            }  
         
         console.log("Switch status MOVF:", data);
       });
@@ -698,27 +727,36 @@ manual_or_vfd_sel.onclick = () => {
         alert("Cannot switch mode while SDF, SDR, VF, or VR is active (ON).");
         return; // Block the toggle
     }
+        isLocalChange = true; // Set flag before writing
 
-    if (manual_or_vfd_sel.value == 1) {
-        manual_or_vfd_sel.value = 0;
+    if (manual_or_vfd_sel.value === "1") {
+        manual_or_vfd_sel.value = "0";
         manual_or_vfd_sel_value = manual_or_vfd_sel.value;
         manual_or_vfd_sel.innerHTML = "MANUAL";
-        database.ref('Switch/MOVF').set(0);
+        console.log("MANUAL");
+        database.ref('Switch/MOVF').set("0").then(()=>{
+            setTimeout(() => {isLocalChange = false},100);
+        });
 
     } else {
-        manual_or_vfd_sel.value = 1;
+        manual_or_vfd_sel.value = "1";
         manual_or_vfd_sel_value = manual_or_vfd_sel.value;
         manual_or_vfd_sel.innerHTML = "VFD";
-        database.ref('Switch/MOVF').set(1);
+        console.log("VFD");
+        database.ref('Switch/MOVF').set("1").then(()=>{
+            setTimeout(() => {isLocalChange = false},100);
+        });
 
     }
+
+    
 
     toggleManualOrVFD();
 }
 
 
 function toggleManualOrVFD() {
-    if (manual_or_vfd_sel.value == 1) { // VFD selected
+    if (manual_or_vfd_sel.value === "1") { // VFD selected
         // Enable VFD controls
         vfd_forward.disabled = false;
         vfd_reverse.disabled = false;
