@@ -1,0 +1,194 @@
+# Development Dependencies
+node_modules/
+npm-debug.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.pnpm-debug.log*
+lerna-debug.log*
+
+# IDE and Editor Files
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.idea/
+.DS_Store
+*.swp
+*.swo
+*~
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+*.sublime-project
+
+# OS-Specific Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+*.lnk
+*~
+.AppleDouble
+.LSOverride
+
+# Environment Variables
+.env
+.env.local
+.env.*.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Build Outputs
+/build/
+/dist/
+/out/
+*.min.js
+*.min.css
+*.map
+
+# Temporary & Cache Files
+*.tmp
+*.temp
+*.cache
+.cache/
+.eslintcache
+.stylelintcache
+.prettier-ignore
+.firebase/
+.firebaserc
+
+# Log Files
+*.log
+logs/
+
+
+# Markdown Files
+*.md
+
+# System Files
+.git/
+.gitkeep
+Thumbs.db
+
+# Package Lock Files (Optional - uncomment if you prefer not to track)
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
+
+# Testing & Coverage
+/coverage/
+/.nyc_output/
+/test-results/
+junit.xml
+
+# Local Database Files
+*.db
+*.sqlite
+*.sqlite3
+
+# Backup Files
+*.bak
+*.backup
+*.orig
+*~
+
+# Archive Files
+*.zip
+*.tar.gz
+*.rar
+*.7z
+
+# Sensitive Information
+credentials.json
+secrets.json
+private-key.json
+firebase-key.json
+
+# Python Virtual Environments (if using Python scripts)
+venv/
+env/
+ENV/
+.venv/
+
+# macOS System Files
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# Windows Files
+desktop.ini
+
+# Compiled Files
+*.class
+*.jar
+*.exe
+*.o
+*.so
+*.a
+*.dylib
+
+# IDE Settings (except recommended configs)
+.vscode/settings.json
+.vscode/launch.json
+!.vscode/extensions.json
+
+# Docker (if using containers)
+.dockerignore
+docker-compose.override.yml
+
+# npm
+.npm
+package.json.bak
+
+# yarn
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.pnp
+
+# Local Netlify folder
+.netlify
+
+# vercel
+.vercel
+
+# Custom Project Specific
+/.firebase-emulator-data/
+/node_modules/.cache/
+/dist/
+/docs/.env.local
+temp/
+scratch/
+
+# VS Code Specific
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+# IntelliJ IDEA
+out/
+
+# Compiled Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Miscellaneous
+.directory
+.thumbs.db
+_redirects
